@@ -99,3 +99,15 @@ The MNIST dataset is publicly available at https://yann.lecun.com/exdb/mnist/ an
             i += 1
 
         return
+
+
+
+
+###########################################################
+# This code is part of the python toolbox termed
+#
+# CHAMELEON --- Computational and mAthematical MEthods in
+# machine LEarning, Optimization and iNference
+#
+# For details see https://github.com/andreasmang/chameleon
+###########################################################
