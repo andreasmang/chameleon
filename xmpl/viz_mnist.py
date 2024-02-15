@@ -2,7 +2,7 @@ import sys
 sys.path.append("..")
 sys.path.append("../data")
 
-from Data import Data
+from Data import *
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,7 +13,7 @@ dat = Data()
 
 # load dataset
 n = 28;
-Y,C,L = dat._read_mnist( )
+Y,C,L = dat.read_mnist( )
 
 print("Y", Y.shape)
 print("C", C.shape)

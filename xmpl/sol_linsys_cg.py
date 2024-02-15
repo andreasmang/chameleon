@@ -4,8 +4,8 @@ import sys
 sys.path.append("..")
 sys.path.append("../data")
 
-from Data import Data
-from LinSolve import LinSolve
+from Data import *
+from LinSolve import *
 
 
 n = 128; # problem dimension
@@ -15,13 +15,13 @@ dat = Data()
 sol = LinSolve()
 
 # problem setup
-A = dat._get_spd_mat( n )
+A = dat.get_spd_mat( n )
 xtrue = np.random.rand( n )
 y = np.matmul( A, xtrue )
 
 # execute cg solver
-sol._enable_debug()
-xcg = sol._run_cg( A, y, 1e-12, 1000 )
+sol.enable_debug()
+xcg = sol.run_cg( A, y, 1e-12, 1000 )
 
 # set initial guess
 x0 = 0*xtrue

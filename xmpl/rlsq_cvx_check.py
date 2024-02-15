@@ -2,9 +2,9 @@ import numpy as np
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
-sys.path.append("..")
+sys.path.append("../")
 
-from LineSearchOpt import Optimize
+from LineSearchOpt import *
 
 
 
@@ -47,7 +47,7 @@ opt = Optimize();
 
 # define function handle
 fctn = lambda x, flag: eval_objfun( A, x, y, 0.03, flag )
-opt._set_objfctn( fctn )
+opt.set_objfctn( fctn )
 
 bound = np.zeros(2)
 b = 5
@@ -61,15 +61,17 @@ ntrials = 10
 
 g = np.zeros([m,ntrials])
 
+# draw random perturbations
 for i in range(ntrials):
     # draw a random point
     x = np.random.rand( n )
     # compute 1d function along line: g(t) = f( x + t v )
-    g[:,i] = opt._cvx_check( x, bound, m )
+    g[:,i] = opt.cvx_check( x, bound, m )
 
+
+# plot
 t = np.linspace( bound[0], bound[1], m )
 plt.plot( t, g )
-
 plt.show()
 
 

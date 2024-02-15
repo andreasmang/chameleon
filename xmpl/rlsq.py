@@ -4,8 +4,8 @@ import sys
 sys.path.append("..")
 sys.path.append("../data")
 
-from LineSearchOpt import Optimize
-from Data import Data
+from LineSearchOpt import *
+from Data import *
 
 
 
@@ -41,13 +41,12 @@ n = 128; # problem dimension
 opt = Optimize()
 dat = Data()
 
-A = dat._get_spd_mat( n )
+A = dat.get_spd_mat( n )
 
 xtrue = np.random.rand( n )
 
 # compute right hand side
 y = np.matmul( A, xtrue )
-
 
 # define function handle
 fctn = lambda x, flag: eval_objfctn( A, x, y, 1e-6, flag )
@@ -56,14 +55,14 @@ fctn = lambda x, flag: eval_objfctn( A, x, y, 1e-6, flag )
 x = np.zeros( n )
 
 # set parameters
-opt._set_objfctn( fctn )
-opt._set_maxiter( 100 )
+opt.set_objfctn( fctn )
+opt.set_maxiter( 100 )
 
 # execture solver (gsc)
-xgd = opt._run( x, "gdsc" )
+xgd = opt.run( x, "gdsc" )
 
 # execture solver (newton)
-xnt = opt._run( x, "newton" )
+xnt = opt.run( x, "newton" )
 
 
 z = np.linspace( 0, 1, n)

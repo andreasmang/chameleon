@@ -5,14 +5,10 @@ class LinSolve:
     def __init__(self):
         self.debug = 0
 
-
-
-    def _enable_debug(self):
+    def enable_debug(self):
         self.debug = 1
 
-
-
-    def _run_cg( self, A, y, tol, maxit=0 ):
+    def run_cg( self, A, y, tol, maxit=0 ):
 
         imsg = " >> cg:"
 

@@ -6,49 +6,55 @@ from LinSolve import LinSolve
 
 class Optimize:
     def __init__(self):
-        self.data = [ ]
-        self.debug = 1
-        self.df_rtol = 1e-6
-        self.df_atol = 1e-12
-        self.maxiter = 0
-        self.objfctn = []
         self.method = []
-        self.ndf0 = []
-        self.sol = LinSolve()
-        self.sol._enable_debug()
+
+        # private variables
+        self._ndf0 = []
+        self._objfctn = []
+        self._sol = LinSolve()
+        self._debug = 1
+        self._df_rtol = 1e-6
+        self._df_atol = 1e-12
+        self._maxiter = 0
 
 
-    def _set_objfctn( self, objfctn ):
+    def set_objfctn( self, objfctn ):
         """
-        _set_objfctn set objective function (function handle);
+        set_objfctn set objective function (function handle);
         objective function is assumed ot be only a function of x
         i.e., the decision variable
         """
-        self.objfctn = objfctn
+        self._objfctn = objfctn
 
 
 
-    def _set_maxiter( self, maxiter ):
+    def set_maxiter( self, maxiter ):
         """
-        _set_maxiter set max number of iterations
+        set_maxiter set max number of iterations
         """
-        self.maxiter = maxiter
+        self._maxiter = maxiter
 
+
+
+    def set_opttol( self, tol ):
+        """
+        set_opttol set relative tolerance for gradient
+        """
+        self._df_rtol = tol
 
 
     def _get_sdir( self, x ):
         """
-        _getsdir get search direction for line search optimization
+        _get_sdir get search direction for line search optimization
         """
         # evaluate objective function
-
         if self.method == "gdsc":
-            f,df = self.objfctn( x, "df" )
+            f,df = self._objfctn( x, "df" )
             s = -df
         elif self.method == "newton":
-            f,df,d2f = self.objfctn( x, "d2f" )
+            f,df,d2f = self._objfctn( x, "d2f" )
             if callable(d2f):
-                s = self.sol._run_cg( d2f, -df, 1e-1, 100 )
+                s = self._sol.run_cg( d2f, -df, 1e-1, 100 )
             else:
                 s = np.linalg.solve(d2f, -df)
 
@@ -58,11 +64,11 @@ class Optimize:
 
     def _do_linesearch( self, x, s ):
         """
-        _do_linesearch do line search
+        _do_linesearch do line search; implements armijo line search
         """
 
         # evaluate objective function
-        fx, dfx = self.objfctn( x, "df" );
+        fx, dfx = self._objfctn( x, "df" );
 
         # initialize flag
         success = 0;
@@ -77,7 +83,7 @@ class Optimize:
 
         for i in range(1,maxit):
             # evaluate objective function
-            ftrial = self.objfctn( x + t*s, "f" )
+            ftrial = self._objfctn( x + t*s, "f" )
 
             #if self.debug:
             #    print("{:e}".format(ftrial), "<", "{:e}".format(fx), "[ t =","{:e}".format(t),"]")
@@ -104,16 +110,18 @@ class Optimize:
 
         ndf = np.linalg.norm( df )
 
-        if ( ndf <= self.df_rtol*self.ndf0  ):
-            print(">> solver converged: {:e}".format(ndf), "<", "{:e}".format(self.df_rtol*self.ndf0))
+        tol = self._df_rtol*self._ndf0
+
+        if ( ndf <= tol ):
+            print(">> solver converged: {:e}".format(ndf), "<", "{:e}".format(tol))
             converged = 1
 
-        if ( ndf <= self.df_atol ):
-            print(">> solver converged: {:e}".format(ndf), "<", "{:e}".format(self.ndf0))
+        if ( ndf <= self._df_atol ):
+            print(">> solver converged: {:e}".format(ndf), "<", "{:e}".format(self._ndf0))
             converged = 1
 
-        if ( k >= self.maxiter):
-            print(">> maximum number of iterations (", self.maxiter, ") reached")
+        if ( k >= self._maxiter):
+            print(">> maximum number of iterations (", self._maxiter, ") reached")
             converged = 1
 
 
@@ -125,10 +133,10 @@ class Optimize:
         """
         _get_newton_step do newton step
         """
-        if callable(d2f):
+        if callable( d2f ):
             s = np.inner( v, d2f( v ) )
         else:
-            s = np.matmul(np.linalg.inv(d2f), -df);
+            s = np.matmul( np.linalg.inv( d2f ), -df );
 
         # apply inverse of hessian to negative gradient
 
@@ -149,7 +157,7 @@ class Optimize:
 
 
 
-    def _run( self, x, flag="gdsc" ):
+    def run( self, x, flag="gdsc" ):
         """
         _optimize run optimizer
         """
@@ -157,8 +165,8 @@ class Optimize:
         # set optimization method
         self.method = flag;
 
-        f,df = self.objfctn( x, "df" )
-        self.ndf0 = np.linalg.norm( df )
+        f,df = self._objfctn( x, "df" )
+        self._ndf0 = np.linalg.norm( df )
 
         reps = 55
         self._print_header( flag, reps );
@@ -185,10 +193,10 @@ class Optimize:
                 x = x + t*s
 
             # check for convergence
-            f,df = self.objfctn( x, "df" )
+            f,df = self._objfctn( x, "df" )
 
             ndf = np.linalg.norm( df )
-            print("{:>6d}".format(k), "{:>15e}".format(ndf), "{:>15e}".format(ndf/self.ndf0), "{:>15e}".format(t))
+            print("{:>6d}".format(k), "{:>15e}".format(ndf), "{:>15e}".format(ndf/self._ndf0), "{:>15e}".format(t))
 
             converged = self._check_convergence( x, k, df )
 
@@ -199,9 +207,9 @@ class Optimize:
         return x
 
 
-    def _cvx_check( self, x, bound, n = 1000 ):
+    def cvx_check( self, x, bound, n = 1000 ):
         """
-        _cvx_check basic check if function is convex
+        cvx_check basic check if function is convex
         """
         # draw random direction in R^n
         v = np.random.rand( x.shape[0] );
@@ -214,13 +222,13 @@ class Optimize:
         g = np.zeros( n )
         for j in range( n ):
             y = x + t[j]*v
-            g[j] = self.objfctn( y, "f" )
+            g[j] = self._objfctn( y, "f" )
 
         return g
 
 
 
-    def _deriv_check( self, x ):
+    def deriv_check( self, x ):
 
         reps = 51
         print( reps*"-" )
@@ -231,7 +239,7 @@ class Optimize:
         v = np.random.rand( x.shape[0] ); # random perturbation
 
         # evaluate objective function
-        f, df, d2f = self.objfctn( x, "d2f" );
+        f, df, d2f = self._objfctn( x, "d2f" );
 
         # compute linear term
         dfv = np.inner( df, v )
@@ -252,21 +260,21 @@ class Optimize:
         print( reps*"-" )
 
         # do derivative check
-        for j in range( 0, m ):
+        for j in range( m ):
             hh = h[j]*h[j];
 
-            ft = self.objfctn( x + h[j]*v, "f" ); # function value
+            ft = self._objfctn( x + h[j]*v, "f" ); # function value
             t0[j] = np.linalg.norm( f - ft ); # taylor poly 0
             t1[j] = np.linalg.norm( f + h[j]*dfv - ft ) # taylor poly 1
             t2[j] = np.linalg.norm( f + h[j]*dfv + 0.5*hh*vtd2fv - ft ); # taylor poly 2
 
             # display to user
-            print("{:e}".format(h[j]), "{:e}".format(t0[j]), "{:e}".format(t1[j]), "{:e}".format(t2[j]))
+            print("{:e}".format( h[j] ), "{:e}".format( t0[j] ), "{:e}".format( t1[j] ), "{:e}".format( t2[j] ) )
 
         print( reps*"-" )
 
         # plot errors
-        if self.debug:
+        if self._debug:
             plt.loglog( h, t0 )
             plt.loglog( h, t1 )
             plt.loglog( h, t2 )

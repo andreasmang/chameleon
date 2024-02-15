@@ -2,9 +2,7 @@ import numpy as np
 import sys
 sys.path.append("..")
 
-from LineSearchOpt import Optimize
-
-
+from LineSearchOpt import *
 
 # evaluate objective function
 def eval_objfun( A, x, y, alpha, flag="d2f" ):
@@ -31,7 +29,6 @@ def eval_objfun( A, x, y, alpha, flag="d2f" ):
     return f,df,d2f;
 
 
-
 n = 512; # problem dimension
 A = np.random.rand( n, n )
 x = np.random.rand( n )
@@ -46,10 +43,10 @@ opt = Optimize();
 fctn = lambda x, flag: eval_objfun( A, x, y, 0.1, flag )
 
 # set objective function
-opt._set_objfctn( fctn )
+opt.set_objfctn( fctn )
 
 # perform derivative check
-opt._deriv_check( x )
+opt.deriv_check( x )
 
 
 
