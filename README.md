@@ -1,6 +1,6 @@
 # CHAMELEON
 
-The repository provides code templates for teaching related to *C*omputational and m*A*thematical *ME*thods in machine *LE*arning, *O*ptimization and i*N*ference (**CHAMELEON**).
+The repository provides code templates for teaching related to *C*omputational and m*A*thematical *ME*thods in machine *LE*arning, *O*ptimization and i*N*ference (**ChAMELEON**).
 
 
 ## Requirements
