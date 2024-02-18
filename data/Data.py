@@ -104,3 +104,27 @@ The MNIST dataset is publicly available at https://yann.lecun.com/exdb/mnist/ an
             i += 1
 
         return
+
+
+
+    def check_class( self, Cpred, Ctrue ):
+        """
+        check_class given data classification Cpred and known classes Ctrue,
+        give percentage of correct classifications and indicices of
+        correct classifications
+        """
+
+        # get ids for prediction and true classes; corresponds to predicted
+        # numbers
+        pred_class = np.argmax( Cpred, axis=1 )
+        true_class = np.argmax( Ctrue, axis=1 )
+
+        ids = pred_class == true_class
+
+        n = np.sum( ids )
+        pct = float(n)/float(len(true_class))
+
+        print( "prediction accuracy: ", 100*pct, "( {:e} )".format(pct) )
+
+        return pct, n
+
