@@ -1,4 +1,5 @@
 import numpy as np
+import scipy as sp
 import os
 from scipy.linalg import qr
 from scipy.sparse import csr_matrix
@@ -28,6 +29,34 @@ class Data:
         A = np.matmul( Q, A )
 
         return A
+
+
+
+    def get_sparse_reg_dat( self ):
+
+        m = 1500  # number of examples
+        n = 5000  # number of features
+        p = 100.0/float(n) # sparsity density
+
+        # generate random, sparse vector
+        rvs = sp.stats.norm().rvs
+        xtrue = sp.sparse.random_array( (n,1), density=p, data_sampler=rvs )
+        xtrue = xtrue.toarray()
+
+        # generate random n x m matrix
+        A = np.random.randn( m, n )
+
+        # normalize columns of matrix to have norm 1
+        z = np.sqrt( np.sum(np.square(A),axis=0) )
+        z = np.divide( 1.0, z )
+        B = sp.sparse.diags( z, 0 )
+        A = np.matmul( A, B.toarray() )
+
+        # compute right hand side
+        y = A @ xtrue
+        y = y + np.sqrt(0.001)*np.random.rand(m,1)
+
+        return xtrue, y, A
 
 
 
