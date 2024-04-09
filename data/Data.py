@@ -1,4 +1,5 @@
 import numpy as np
+import random as rnd
 import scipy as sp
 import os
 from scipy.linalg import qr
@@ -30,6 +31,27 @@ class Data:
 
         return A
 
+
+    def get_tvdat_1d( self ):
+        """
+        get_tvdat_1d get 1d example for perturbed piece-wise
+        constant function (for denoising)
+        """
+
+        n = 100
+        # generate random data
+        xtrue = np.ones( n )
+        for i in range(3):
+            # draw random sample from
+            j2 = rnd.sample( range(0,n), 1 )[0]
+            j1 = math.ceil(j2/2)
+
+            k = rnd.sample( range(0,10), 1 )[0]
+
+            xtrue[ j1 : j2 ] = (k+1)*xtrue[ j1 : j2 ]
+
+        y = xtrue + np.random.randn( n )
+        return xtrue, y
 
 
     def get_sparse_reg_dat( self ):
