@@ -8,11 +8,8 @@ from sklearn import datasets, cluster, preprocessing
 n_samples = 500
 seed = 30
 
-noisy_circles = skl.datasets.make_circles( n_samples=n_samples,
+X,y = skl.datasets.make_circles( n_samples=n_samples,
                     factor=0.5, noise=0.05, random_state=seed )
-
-
-X, y = noisy_circles
 
 # normalize dataset for easier parameter selection
 X = skl.preprocessing.StandardScaler().fit_transform(X)
