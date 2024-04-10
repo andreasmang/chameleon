@@ -31,12 +31,7 @@ class Data:
 
         return A
 
-
-    def get_tvdat_1d( self ):
-        """
-        get_tvdat_1d get 1d example for perturbed piece-wise
-        constant function (for denoising)
-        """
+    def get_denoise_data1D( self ):
 
         n = 100
         # generate random data
@@ -52,6 +47,29 @@ class Data:
 
         y = xtrue + np.random.randn( n )
         return xtrue, y
+
+
+    def get_denoise_data2D( self, delta ):
+
+        Y,C,L = self.read_mnist( )
+
+        n = [28,28]
+
+        # get number of images
+        m = Y.shape[0]
+        k = rnd.randint(0,m)
+        xtrue = Y[k,:].reshape( n )
+
+        # map to {0,1}; if you want original numbers
+        # remove this
+        xtrue[ xtrue >=  0.5 ] = 1.0
+        xtrue[ xtrue <   0.5 ] = 0.0
+
+        x0 = xtrue.reshape( n[0]*n[1] )
+        x0 = x0 / np.max( x0 )
+
+        y = x0 + delta*np.random.randn( n[0]*n[1] )
+        return xtrue,y
 
 
     def get_sparse_reg_dat( self ):
