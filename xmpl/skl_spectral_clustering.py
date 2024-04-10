@@ -84,7 +84,6 @@ ax[0].scatter( X2[:, 0], X2[:, 1], s=10 )
 ax[0].set_xlabel( r'$X_1$')
 ax[0].set_ylabel( r'$X_2$')
 
-
 ax[1].scatter( X1_pred[:, 0], X1_pred[:, 1], s=10 )
 ax[1].scatter( X2_pred[:, 0], X2_pred[:, 1], s=10 )
 ax[1].set_xlabel( r'$X_{\text{pred},1}$')
