@@ -33,3 +33,15 @@ plt.plot( z, xcg, marker="2", linestyle='', markersize=12)
 plt.plot( z, xtrue )
 plt.legend(['initial guess', 'cg solution', r'$x^\star$'], fontsize="20")
 plt.show()
+
+
+
+
+###########################################################
+# This code is part of the python toolbox termed
+#
+# CHAMELEON --- Computational and mAthematical MEthods in
+# machine LEarning, Optimization and iNference
+#
+# For details see https://github.com/andreasmang/chameleon
+###########################################################

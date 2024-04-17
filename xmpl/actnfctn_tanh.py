@@ -40,3 +40,15 @@ sYX, dsYX, d2sYX = tanh_actnfctn( Ypred )
 print( "shape of tanh( Z )", sYX.shape )
 print( "shape of derivative of tanh( Z )", dsYX.shape )
 print( "shape of hessian of tanh( Z )", d2sYX.shape )
+
+
+
+
+###########################################################
+# This code is part of the python toolbox termed
+#
+# CHAMELEON --- Computational and mAthematical MEthods in
+# machine LEarning, Optimization and iNference
+#
+# For details see https://github.com/andreasmang/chameleon
+###########################################################

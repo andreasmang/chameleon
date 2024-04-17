@@ -38,7 +38,7 @@ def eval_fwd_prop( U0, K, n ):
 
 m = 512
 t = np.linspace( 0.2, 2.0, m )
-n_layer = 100
+n_layer = 5
 
 
 # select inital feature; drawn from normal distribution
@@ -72,3 +72,15 @@ X, Y = np.meshgrid(t, t)
 plt.contour( X, Y, objval )
 plt.plot(theta_true[0], theta_true[1], 'ro')
 plt.show( )
+
+
+
+
+###########################################################
+# This code is part of the python toolbox termed
+#
+# CHAMELEON --- Computational and mAthematical MEthods in
+# machine LEarning, Optimization and iNference
+#
+# For details see https://github.com/andreasmang/chameleon
+###########################################################
