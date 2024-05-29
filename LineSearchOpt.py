@@ -129,21 +129,6 @@ class Optimize:
 
 
 
-    def _get_newton_step( self, df, d2f ):
-        """
-        _get_newton_step do newton step
-        """
-        if callable( d2f ):
-            s = np.inner( v, d2f( v ) )
-        else:
-            s = np.matmul( np.linalg.inv( d2f ), -df );
-
-        # apply inverse of hessian to negative gradient
-
-        return s;
-
-
-
     def _print_header( self, flag, reps ):
 
         print( reps*"-" )
