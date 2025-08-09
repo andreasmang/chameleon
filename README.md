@@ -12,9 +12,8 @@ Written and tested under `Python 3.12.2`.
 The modules required to run this code are
 - `numpy`
 - `scipy`
-- `requests`
 - `matplotlib`
-
+- ...
 
 This modules can be installed via `pip`:
 ```
