@@ -45,16 +45,19 @@ plt.plot(y, 'r--', label=r'$y$')
 plt.plot(y_obs, 'b-.', label=r'$y_{\text{obs}}$')
 plt.plot(x_true, 'k-', label=r'$x_{\text{true}}$')
 plt.legend(); plt.tight_layout()
+plt.savefig('integration-data.pdf')
 
 # regularization operator
 plt.figure();
 plt.matshow(L)
+plt.savefig('integration-regularization-operator.pdf')
 
 # forward operator
 plt.figure();
 plt.matshow(K)
+plt.savefig('integration-forward-operator.pdf')
 
-plt.show()
+#plt.show()
 
 
 
