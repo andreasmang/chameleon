@@ -17,7 +17,7 @@ def f(x):
     return (k[0]*x - y[0])**2 + (k[1]*x - y[1])**2
 
 # closed-form LS solution: x* = (sum a_i b_i) / (sum a_i^2)
-xsol = (k @ k) / (y @ y)
+xsol = (k @ y) / (k @ k)
 
 # coordinate vector to evaluate objective function
 h = 0.01
