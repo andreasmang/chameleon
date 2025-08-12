@@ -57,42 +57,73 @@ def deriv_check( fctn, x ):
     return
 
 
-# evaluate objective function
-def eval_fctn( K, x, y, alpha, flag="d2f" ):
-    # compute residual
-    r = np.matmul( K, x ) - y
+def sigmoid(x):
+    """Numerically stable logistic sigmoid, elementwise."""
+    x = np.asarray(x, dtype=np.float64)
+    out = np.empty_like(x)
+    pos = x >= 0
+    neg = ~pos
+    out[pos] = 1.0 / (1.0 + np.exp(-x[pos]))
+    expx = np.exp(x[neg])
+    out[neg] = expx / (1.0 + expx)
+    return out
 
-    # evaluate objective function
-    f = 0.5*np.inner( r, r ) + alpha*0.5*np.inner( x, x )
+
+# evaluate objective function
+def eval_fctn( W, x, y, flag="d2f" ):
+    # forward pass
+    z = W @ x       # (m,)
+    s = sigmoid(z)  # sigma(z)
+    r = s + y       # residual in the 2-norm
+
+    # objective
+    f = float(r @ r)
 
     if flag == "f":
         return f
 
-    # evaluate gradient
-    KT = K.transpose()
-    df = np.matmul( KT, r ) + alpha*x
+    # derivatives of sigmoid
+    sp = s * (1.0 - s)        # sigma'(z)
+    s2 = sp * (1.0 - 2.0 * s) # sigma''(z)
+
+    # Gradient: 2 * W^T ( sigma'(z) ⊙ r )
+    df = 2.0 * (W.T @ (sp * r))
 
     if flag == "df":
         return f,df
 
-    n = K.shape[0]
-    # evaluate hessian
-    d2f = np.matmul( KT, K ) + alpha*np.identity( n )
+    # Hessian: 2 * W^T diag( (sigma')^2 + sigma'' ⊙ r ) W
+    weights = 2.0 * (sp * sp + s2 * r)  # (m,)
+    d2f = W.T @ (weights[:, None] * W)
 
     return f, df, d2f
 
 
+def hess_vec( x, W, b, v):
+    # hessian-vector product d2f(x) @ v (more efficient than forming d2f explicitly)
+
+    z = W @ x
+    s = sigmoid(z)
+    r = s + b
+    sp = s * (1.0 - s)
+    s2 = sp * (1.0 - 2.0 * s)
+    weights = 2.0 * (sp * sp + s2 * r)  # (m,)
+
+    Wv = W @ v                          # (m,)
+    return W.T @ (weights * Wv)
 
 
-n = 512; # problem dimension
+
+
+n = 64; # problem dimension
 K = np.random.rand( n, n )
 x = np.random.rand( n )
 
 # compute right hand side
-y = np.matmul( K, x )
+y = sigmoid( np.matmul( K, x ) )
 
 # define function handle
-fctn = lambda x, flag: eval_fctn( K, x, y, 0.1, flag )
+fctn = lambda x, flag: eval_fctn( K, x, y, flag )
 
 
 # perform derivative check
