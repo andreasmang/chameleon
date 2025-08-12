@@ -20,5 +20,8 @@ This modules can be installed via `pip`:
 python3 -m pip install <module name>
 ```
 
-To simply the installation of these modules, I have added a bash file called `install.sh` that you can execute to install the required libraries. 
+To simply the installation of these modules, I have created a `requirements.txt`. Simply execute the following command in your command line:
+```
+pip install -r requirements.txt
+```
 
