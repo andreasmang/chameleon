@@ -16,7 +16,7 @@ y_pred = lin_reg.predict(u)
 print("intercept:", lin_reg.intercept_)
 print("coefficients:", lin_reg.coef_)
 
-# --- Plot data and regression line ---
+# plot data and regression line
 plt.scatter(u, y, color="blue", label="data points")
 plt.plot(u, y_pred, color="red", linewidth=2, label="fitted model")
 plt.xlabel("u (predictor)")
