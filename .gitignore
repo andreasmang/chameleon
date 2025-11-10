@@ -3,3 +3,5 @@ __pycache__
 *.swp
 *-ubyte.gz
 *.pdf
+*data*
+*.pt
